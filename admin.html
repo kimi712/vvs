@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoamLab 管理后台</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050810;
+  --bg2:#080d1a;
+  --bg3:#0d1426;
+  --accent:#00f5c4;
+  --accent2:#4f8fff;
+  --accent3:#ff4f7b;
+  --text:#eef2ff;
+  --muted:rgba(200,210,255,0.5);
+  --border:rgba(79,143,255,0.15);
+  --border2:rgba(79,143,255,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans SC',sans-serif;
+}
+
+/* ─── LAYOUT ─── */
+.admin-wrap{display:flex;min-height:100vh}
+.sidebar{
+  width:240px;background:var(--bg2);
+  border-right:1px solid var(--border);
+  padding:1.5rem 0;
+  position:fixed;left:0;top:0;height:100vh;
+  overflow-y:auto;
+}
+.main{
+  margin-left:240px;flex:1;
+  padding:2rem;
+  max-width:1400px;
+  margin-left:240px;
+  width:calc(100% - 240px);
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar-logo{
+  padding:0 1.5rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;font-size:0.95rem;
+}
+.sidebar-logo span{color:var(--accent)}
+.nav-menu{list-style:none}
+.nav-item{
+  padding:0;margin:0;
+}
+.nav-link{
+  display:flex;align-items:center;gap:10px;
+  padding:0.75rem 1.5rem;
+  color:var(--muted);text-decoration:none;
+  font-size:0.875rem;
+  cursor:pointer;
+  border:none;background:none;
+  width:100%;text-align:left;
+  font-family:inherit;
+  transition:color 0.2s,background 0.2s;
+}
+.nav-link:hover{background:rgba(79,143,255,0.1);color:var(--text)}
+.nav-link.active{
+  background:rgba(0,245,196,0.1);
+  color:var(--accent);
+  border-right:2px solid var(--accent);
+}
+.nav-link .icon{font-size:1rem}
+
+/* ─── HEADER ─── */
+.header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:2rem;
+  padding:1.5rem;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.header-title h1{font-size:1.75rem;margin-bottom:0.25rem}
+.header-title p{color:var(--muted);font-size:0.85rem}
+.header-actions{display:flex;gap:1rem}
+.btn{
+  padding:0.6rem 1.25rem;border-radius:6px;
+  border:1px solid var(--border2);
+  background:transparent;color:var(--text);
+  cursor:pointer;font-family:inherit;
+  font-size:0.875rem;font-weight:500;
+  transition:border-color 0.2s,background 0.2s,color 0.2s;
+}
+.btn:hover{border-color:var(--accent2);background:rgba(79,143,255,0.05)}
+.btn-primary{
+  background:var(--accent);color:#050810;
+  border-color:var(--accent);font-weight:700;
+}
+.btn-primary:hover{opacity:0.9}
+.btn-danger{
+  border-color:var(--accent3);color:var(--accent3);
+}
+.btn-danger:hover{background:rgba(255,79,123,0.1)}
+
+/* ─── CONTENT ─── */
+.panel{display:none}
+.panel.active{display:block}
+
+.form-section{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:2rem;
+  margin-bottom:1.5rem;
+}
+.form-section h2{
+  font-size:1.25rem;margin-bottom:1.25rem;
+}
+.form-group{margin-bottom:1.5rem}
+.form-group label{
+  display:block;margin-bottom:0.5rem;
+  font-weight:500;font-size:0.9rem;
+  color:var(--text);
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;padding:0.65rem 1rem;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;color:var(--text);
+  font-family:inherit;font-size:0.875rem;
+  transition:border-color 0.2s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  outline:none;border-color:var(--accent2);box-shadow:0 0 0 2px rgba(79,143,255,0.1);
+}
+.form-group textarea{min-height:120px;resize:vertical}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+
+/* ─── TABLE ─── */
+.table-wrap{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:1.5rem;
+}
+table{
+  width:100%;border-collapse:collapse;
+}
+th{
+  background:rgba(79,143,255,0.05);
+  padding:1rem;text-align:left;
+  font-weight:600;font-size:0.85rem;
+  border-bottom:1px solid var(--border);
+  color:var(--accent2);
+}
+td{
+  padding:1rem;border-bottom:1px solid var(--border);
+  font-size:0.875rem;
+}
+tr:last-child td{border-bottom:none}
+tr:hover{background:rgba(0,245,196,0.03)}
+.table-actions{display:flex;gap:0.5rem}
+.btn-sm{
+  padding:0.35rem 0.75rem;font-size:0.75rem;
+  background:transparent;border:1px solid var(--border);
+  border-radius:4px;color:var(--text);cursor:pointer;
+  font-family:inherit;transition:border-color 0.2s;
+}
+.btn-sm:hover{border-color:var(--accent2)}
+.btn-sm-del{border-color:var(--accent3);color:var(--accent3)}
+
+/* ─── CARD GRID ─── */
+.card-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.25rem;margin-bottom:2rem;
+}
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem;
+  transition:border-color 0.2s;
+}
+.card:hover{border-color:var(--border2)}
+.card h3{margin-bottom:0.75rem;font-size:1rem}
+.card p{color:var(--muted);font-size:0.85rem;line-height:1.6}
+.card-stat{
+  font-size:1.5rem;font-weight:700;
+  color:var(--accent);margin-bottom:0.25rem;
+}
+.card-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+
+/* ─── MODAL ─── */
+.modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.7);z-index:1000;
+  align-items:center;justify-content:center;
+}
+.modal.open{display:flex}
+.modal-box{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;
+  max-width:500px;width:90%;
+  max-height:80vh;overflow-y:auto;
+}
+.modal-title{font-size:1.25rem;margin-bottom:1.5rem}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;
+  background:transparent;border:none;
+  color:var(--muted);cursor:pointer;font-size:1.5rem;
+}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;
+  background:var(--accent);color:#050810;
+  padding:1rem 1.5rem;border-radius:8px;
+  font-weight:600;z-index:2000;
+  animation:slideup 0.3s ease;
+}
+@keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .sidebar{width:0;position:absolute;z-index:100}
+  .main{margin-left:0;width:100%}
+  .two-col{grid-template-columns:1fr}
+  .header{flex-direction:column;align-items:flex-start;gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span>🌐</span> RoamLab <span>管理</span>
+    </div>
+    <nav class="nav-menu">
+      <li class="nav-item">
+        <button class="nav-link active" data-panel="dashboard">
+          <span class="icon">📊</span> 仪表板
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="settings">
+          <span class="icon">⚙️</span> 站点设置
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="articles">
+          <span class="icon">📝</span> 文章管理
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="sim-cards">
+          <span class="icon">📡</span> 电话卡库
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="finance">
+          <span class="icon">🏦</span> 金融工具
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="regions">
+          <span class="icon">🗺️</span> 地区数据
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-panel="analytics">
+          <span class="icon">📈</span> 数据分析
+        </button>
+      </li>
+      <li class="nav-item" style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem">
+        <button class="nav-link" id="logout-btn">
+          <span class="icon">🚪</span> 退出登录
+        </button>
+      </li>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div class="panel active" id="dashboard">
+      <div class="header">
+        <div class="header-title">
+          <h1>仪表板</h1>
+          <p>欢迎回来，管理员</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn" onclick="location.href='index.html'" target="_blank">预览网站 →</button>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-stat">50+</div>
+          <div class="card-label">覆盖国家地区</div>
+          <p>已整理的国家和地区数量，包含电话卡和金融服务</p>
+        </div>
+        <div class="card">
+          <div class="card-stat" id="article-count">0</div>
+          <div class="card-label">已发布文章</div>
+          <p>数字游民指南和经验分享的文章总数</p>
+        </div>
+        <div class="card">
+          <div class="card-stat" id="sim-count">0</div>
+          <div class="card-label">电话卡套餐</div>
+          <p>已测试和整理的全球电话卡套餐</p>
+        </div>
+        <div class="card">
+          <div class="card-stat" id="finance-count">0</div>
+          <div class="card-label">金融工具</div>
+          <p>已对比的海外金融服务和虚拟卡</p>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>快速操作</h2>
+        <p style="color:var(--muted);margin-bottom:1.5rem">快速访问最常用的功能</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
+          <button class="btn btn-primary" onclick="switchPanel('articles')">📝 发布新文章</button>
+          <button class="btn btn-primary" onclick="switchPanel('sim-cards')">📡 添加电话卡</button>
+          <button class="btn btn-primary" onclick="switchPanel('finance')">🏦 添加金融工具</button>
+          <button class="btn btn-primary" onclick="switchPanel('settings')">⚙️ 编辑站点信息</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel" id="settings">
+      <div class="header">
+        <div class="header-title">
+          <h1>站点设置</h1>
+          <p>编辑全局配置和品牌信息</p>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>基本信息</h2>
+        <div class="form-group">
+          <label>网站标题</label>
+          <input type="text" id="site-title" placeholder="漫游实验室 RoamLab" value="漫游实验室 RoamLab">
+        </div>
+        <div class="two-col">
+          <div class="form-group">
+            <label>品牌简述</label>
+            <input type="text" id="site-desc" placeholder="全球连接，自由生长" value="全球连接，自由生长">
+          </div>
+          <div class="form-group">
+            <label>英文标语</label>
+            <input type="text" id="site-en" placeholder="RoamLab · Global Connectivity" value="RoamLab · Global Connectivity">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Hero 区描述</label>
+          <textarea id="hero-desc">电话卡实测 · 海外金融工具 · 数字游民手册
+写给所有想用脚步丈量世界的人</textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>社交媒体</h2>
+        <div class="form-group">
+          <label>Telegram 社群链接</label>
+          <input type="text" id="telegram-link" placeholder="https://t.me/roamlab" value="https://t.me/roamlab">
+        </div>
+        <div class="form-group">
+          <label>Twitter / X</label>
+          <input type="text" id="twitter-link" placeholder="https://twitter.com/roamlab" value="https://twitter.com/roamlab">
+        </div>
+        <div class="form-group">
+          <label>B站视频</label>
+          <input type="text" id="bilibili-link" placeholder="https://space.bilibili.com/roamlab" value="">
+        </div>
+        <div class="form-group">
+          <label>邮箱地址</label>
+          <input type="email" id="email" placeholder="contact@roamlab.com" value="contact@roamlab.com">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>统计数据</h2>
+        <div class="two-col">
+          <div class="form-group">
+            <label>覆盖国家/地区数</label>
+            <input type="number" id="stat-countries" value="50">
+          </div>
+          <div class="form-group">
+            <label>实测卡套餐数</label>
+            <input type="number" id="stat-sim" value="200">
+          </div>
+          <div class="form-group">
+            <label>金融工具数</label>
+            <input type="number" id="stat-finance" value="30">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section" style="border-color:rgba(255,79,123,0.3)">
+        <h2>导出/导入数据</h2>
+        <div style="display:flex;gap:1rem">
+          <button class="btn" onclick="exportData()">💾 导出所有数据</button>
+          <button class="btn" onclick="document.getElementById('import-file').click()">📥 导入数据</button>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:2rem" onclick="saveSiteSettings()">保存设置</button>
+    </div>
+
+    <!-- ARTICLES -->
+    <div class="panel" id="articles">
+      <div class="header">
+        <div class="header-title">
+          <h1>文章管理</h1>
+          <p>创建、编辑和发布您的内容</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openArticleModal()">+ 新建文章</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>已发布文章</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>标题</th><th>分类</th><th>发布日期</th><th>操作</th></tr>
+            </thead>
+            <tbody id="articles-table">
+              <tr><td colspan="4" style="text-align:center;color:var(--muted)">暂无文章，点击上方"新建文章"添加</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIM CARDS -->
+    <div class="panel" id="sim-cards">
+      <div class="header">
+        <div class="header-title">
+          <h1>电话卡库</h1>
+          <p>管理全球电话卡套餐数据</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openSimModal()">+ 添加卡套餐</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>电话卡列表</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>国家/地区</th><th>供应商</th><th>类型</th><th>价格</th><th>更新日期</th><th>操作</th></tr>
+            </thead>
+            <tbody id="sim-table">
+              <tr><td colspan="6" style="text-align:center;color:var(--muted)">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div class="panel" id="finance">
+      <div class="header">
+        <div class="header-title">
+          <h1>金融工具</h1>
+          <p>管理海外金融服务和虚拟卡</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openFinanceModal()">+ 添加工具</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>金融工具列表</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>工具名称</th><th>类型</th><th>支持国家</th><th>评分</th><th>更新日期</th><th>操作</th></tr>
+            </thead>
+            <tbody id="finance-table">
+              <tr><td colspan="6" style="text-align:center;color:var(--muted)">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGIONS -->
+    <div class="panel" id="regions">
+      <div class="header">
+        <div class="header-title">
+          <h1>地区数据</h1>
+          <p>管理覆盖城市和地区信息</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openRegionModal()">+ 添加地区</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>已覆盖地区</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>国旗</th><th>地区名</th><th>电话卡</th><th>金融工具</th><th>操作</th></tr>
+            </thead>
+            <tbody id="regions-table">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted)">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="panel" id="analytics">
+      <div class="header">
+        <div class="header-title">
+          <h1>数据分析</h1>
+          <p>查看网站访问和用户数据</p>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-stat">—</div>
+          <div class="card-label">本月访问</div>
+          <p>连接到 Google Analytics 后会显示</p>
+        </div>
+        <div class="card">
+          <div class="card-stat">—</div>
+          <div class="card-label">用户数</div>
+          <p>独立访客统计</p>
+        </div>
+        <div class="card">
+          <div class="card-stat">—</div>
+          <div class="card-label">热门页面</div>
+          <p>访问最多的内容</p>
+        </div>
+        <div class="card">
+          <div class="card-stat">—</div>
+          <div class="card-label">平均停留</div>
+          <p>用户平均停留时间</p>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>分析集成</h2>
+        <div class="form-group">
+          <label>Google Analytics ID</label>
+          <input type="text" id="ga-id" placeholder="G-XXXXXXXXXX">
+        </div>
+        <button class="btn btn-primary">连接 Google Analytics</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="article-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('article-modal')">×</button>
+    <h2 class="modal-title">新建文章</h2>
+    <div class="form-group">
+      <label>文章标题</label>
+      <input type="text" id="article-title" placeholder="例：日本东京必备的3张电话卡">
+    </div>
+    <div class="form-group">
+      <label>分类</label>
+      <select id="article-category">
+        <option>电话卡指南</option>
+        <option>金融工具</option>
+        <option>数字游民</option>
+        <option>选城攻略</option>
+        <option>其他</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>文章内容</label>
+      <textarea id="article-content" placeholder="在此输入文章内容..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>标签（用逗号分隔）</label>
+      <input type="text" id="article-tags" placeholder="eSIM, 实体卡, 日本">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="saveArticle()">发布文章</button>
+  </div>
+</div>
+
+<div class="modal" id="sim-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('sim-modal')">×</button>
+    <h2 class="modal-title">添加电话卡</h2>
+    <div class="form-group">
+      <label>国家/地区</label>
+      <input type="text" id="sim-region" placeholder="日本">
+    </div>
+    <div class="form-group">
+      <label>供应商</label>
+      <input type="text" id="sim-provider" placeholder="SoftBank, DoCoMo">
+    </div>
+    <div class="form-group">
+      <label>卡片类型</label>
+      <select id="sim-type">
+        <option>eSIM</option>
+        <option>实体SIM</option>
+        <option>漫游套餐</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>价格</label>
+      <input type="text" id="sim-price" placeholder="¥99/5天">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="saveSim()">保存卡片</button>
+  </div>
+</div>
+
+<div class="modal" id="finance-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('finance-modal')">×</button>
+    <h2 class="modal-title">添加金融工具</h2>
+    <div class="form-group">
+      <label>工具名称</label>
+      <input type="text" id="finance-name" placeholder="Wise">
+    </div>
+    <div class="form-group">
+      <label>类型</label>
+      <select id="finance-type">
+        <option>汇款服务</option>
+        <option>虚拟卡</option>
+        <option>数字银行</option>
+        <option>多币种账户</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>支持国家（逗号分隔）</label>
+      <input type="text" id="finance-countries" placeholder="日本, 泰国, 新加坡">
+    </div>
+    <div class="form-group">
+      <label>评分 (1-5)</label>
+      <input type="number" id="finance-rating" min="1" max="5" step="0.5" value="4.5">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="saveFinance()">保存工具</button>
+  </div>
+</div>
+
+<div class="modal" id="region-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('region-modal')">×</button>
+    <h2 class="modal-title">添加地区</h2>
+    <div class="form-group">
+      <label>国旗 Emoji</label>
+      <input type="text" id="region-flag" placeholder="🇯🇵" maxlength="2">
+    </div>
+    <div class="form-group">
+      <label>地区名</label>
+      <input type="text" id="region-name" placeholder="日本">
+    </div>
+    <div class="form-group">
+      <label>推荐电话卡</label>
+      <input type="text" id="region-sim" placeholder="SoftBank, Rakuten">
+    </div>
+    <div class="form-group">
+      <label>推荐金融工具</label>
+      <input type="text" id="region-finance" placeholder="Wise, Revolut">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="saveRegion()">保存地区</button>
+  </div>
+</div>
+
+<script>
+// ─── STORAGE ─── 
+const STORAGE_KEY = 'roamlab_data';
+let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  articles: [],
+  simCards: [],
+  financeTools: [],
+  regions: [],
+  settings: {}
+};
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  updateCounts();
+  showToast('✓ 数据已保存');
+}
+
+function showToast(msg){
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ─── NAVIGATION ─── 
+document.querySelectorAll('[data-panel]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    switchPanel(btn.dataset.panel);
+  });
+});
+
+function switchPanel(panel){
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panel).classList.add('active');
+  
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`[data-panel="${panel}"]`)?.classList.add('active');
+}
+
+// ─── MODALS ─── 
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+
+function openArticleModal(){
+  document.getElementById('article-title').value = '';
+  document.getElementById('article-content').value = '';
+  document.getElementById('article-tags').value = '';
+  openModal('article-modal');
+}
+
+function openSimModal(){
+  document.getElementById('sim-region').value = '';
+  document.getElementById('sim-provider').value = '';
+  document.getElementById('sim-price').value = '';
+  openModal('sim-modal');
+}
+
+function openFinanceModal(){
+  document.getElementById('finance-name').value = '';
+  document.getElementById('finance-countries').value = '';
+  document.getElementById('finance-rating').value = '4.5';
+  openModal('finance-modal');
+}
+
+function openRegionModal(){
+  document.getElementById('region-flag').value = '';
+  document.getElementById('region-name').value = '';
+  document.getElementById('region-sim').value = '';
+  document.getElementById('region-finance').value = '';
+  openModal('region-modal');
+}
+
+// ─── ARTICLES ─── 
+function saveArticle(){
+  const title = document.getElementById('article-title').value;
+  const category = document.getElementById('article-category').value;
+  const content = document.getElementById('article-content').value;
+  const tags = document.getElementById('article-tags').value;
+  
+  if(!title || !content) {
+    alert('请填写标题和内容');
+    return;
+  }
+  
+  appData.articles.push({
+    id: Date.now(),
+    title, category, content, tags,
+    date: new Date().toLocaleDateString('zh-CN')
+  });
+  
+  saveData();
+  closeModal('article-modal');
+  renderArticles();
+}
+
+function renderArticles(){
+  const tbody = document.getElementById('articles-table');
+  if(appData.articles.length === 0){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted)">暂无文章</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = appData.articles.map(a => `
+    <tr>
+      <td>${a.title}</td>
+      <td>${a.category}</td>
+      <td>${a.date}</td>
+      <td>
+        <div class="table-actions">
+          <button class="btn-sm" onclick="editArticle(${a.id})">编辑</button>
+          <button class="btn-sm btn-sm-del" onclick="deleteArticle(${a.id})">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteArticle(id){
+  if(confirm('确定删除此文章吗？')){
+    appData.articles = appData.articles.filter(a => a.id !== id);
+    saveData();
+    renderArticles();
+  }
+}
+
+// ─── SIM CARDS ─── 
+function saveSim(){
+  const region = document.getElementById('sim-region').value;
+  const provider = document.getElementById('sim-provider').value;
+  const type = document.getElementById('sim-type').value;
+  const price = document.getElementById('sim-price').value;
+  
+  if(!region || !provider) {
+    alert('请填写必填项');
+    return;
+  }
+  
+  appData.simCards.push({
+    id: Date.now(),
+    region, provider, type, price,
+    date: new Date().toLocaleDateString('zh-CN')
+  });
+  
+  saveData();
+  closeModal('sim-modal');
+  renderSimCards();
+}
+
+function renderSimCards(){
+  const tbody = document.getElementById('sim-table');
+  if(appData.simCards.length === 0){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted)">暂无数据</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = appData.simCards.map(s => `
+    <tr>
+      <td>${s.region}</td>
+      <td>${s.provider}</td>
+      <td>${s.type}</td>
+      <td>${s.price}</td>
+      <td>${s.date}</td>
+      <td>
+        <div class="table-actions">
+          <button class="btn-sm" onclick="deleteSim(${s.id})">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteSim(id){
+  if(confirm('确定删除吗？')){
+    appData.simCards = appData.simCards.filter(s => s.id !== id);
+    saveData();
+    renderSimCards();
+  }
+}
+
+// ─── FINANCE ─── 
+function saveFinance(){
+  const name = document.getElementById('finance-name').value;
+  const type = document.getElementById('finance-type').value;
+  const countries = document.getElementById('finance-countries').value;
+  const rating = document.getElementById('finance-rating').value;
+  
+  if(!name) {
+    alert('请填写工具名称');
+    return;
+  }
+  
+  appData.financeTools.push({
+    id: Date.now(),
+    name, type, countries, rating,
+    date: new Date().toLocaleDateString('zh-CN')
+  });
+  
+  saveData();
+  closeModal('finance-modal');
+  renderFinance();
+}
+
+function renderFinance(){
+  const tbody = document.getElementById('finance-table');
+  if(appData.financeTools.length === 0){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted)">暂无数据</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = appData.financeTools.map(f => `
+    <tr>
+      <td>${f.name}</td>
+      <td>${f.type}</td>
+      <td>${f.countries}</td>
+      <td>⭐ ${f.rating}</td>
+      <td>${f.date}</td>
+      <td>
+        <div class="table-actions">
+          <button class="btn-sm" onclick="deleteFinance(${f.id})">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteFinance(id){
+  if(confirm('确定删除吗？')){
+    appData.financeTools = appData.financeTools.filter(f => f.id !== id);
+    saveData();
+    renderFinance();
+  }
+}
+
+// ─── REGIONS ─── 
+function saveRegion(){
+  const flag = document.getElementById('region-flag').value;
+  const name = document.getElementById('region-name').value;
+  const sim = document.getElementById('region-sim').value;
+  const finance = document.getElementById('region-finance').value;
+  
+  if(!flag || !name) {
+    alert('请填写国旗和名称');
+    return;
+  }
+  
+  appData.regions.push({
+    id: Date.now(),
+    flag, name, sim, finance
+  });
+  
+  saveData();
+  closeModal('region-modal');
+  renderRegions();
+}
+
+function renderRegions(){
+  const tbody = document.getElementById('regions-table');
+  if(appData.regions.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">暂无数据</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = appData.regions.map(r => `
+    <tr>
+      <td>${r.flag}</td>
+      <td>${r.name}</td>
+      <td>${r.sim || '—'}</td>
+      <td>${r.finance || '—'}</td>
+      <td>
+        <div class="table-actions">
+          <button class="btn-sm" onclick="deleteRegion(${r.id})">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteRegion(id){
+  if(confirm('确定删除吗？')){
+    appData.regions = appData.regions.filter(r => r.id !== id);
+    saveData();
+    renderRegions();
+  }
+}
+
+// ─── SETTINGS ─── 
+function saveSiteSettings(){
+  appData.settings = {
+    title: document.getElementById('site-title').value,
+    desc: document.getElementById('site-desc').value,
+    en: document.getElementById('site-en').value,
+    heroDesc: document.getElementById('hero-desc').value,
+    telegram: document.getElementById('telegram-link').value,
+    twitter: document.getElementById('twitter-link').value,
+    bilibili: document.getElementById('bilibili-link').value,
+    email: document.getElementById('email').value,
+    countries: document.getElementById('stat-countries').value,
+    sim: document.getElementById('stat-sim').value,
+    finance: document.getElementById('stat-finance').value,
+  };
+  saveData();
+}
+
+// ─── UTILS ─── 
+function updateCounts(){
+  document.getElementById('article-count').textContent = appData.articles.length;
+  document.getElementById('sim-count').textContent = appData.simCards.length;
+  document.getElementById('finance-count').textContent = appData.financeTools.length;
+}
+
+function exportData(){
+  const dataStr = JSON.stringify(appData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(dataBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `roamlab_backup_${Date.now()}.json`;
+  a.click();
+  showToast('✓ 数据已导出');
+}
+
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      appData = imported;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      showToast('✓ 数据已导入');
+      renderArticles();
+      renderSimCards();
+      renderFinance();
+      renderRegions();
+      updateCounts();
+    } catch(err) {
+      alert('导入失败：文件格式错误');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ─── LOGOUT ─── 
+document.getElementById('logout-btn').addEventListener('click', () => {
+  if(confirm('确定退出登录吗？')) {
+    localStorage.removeItem('admin_token');
+    location.href = 'login.html';
+  }
+});
+
+// ─── INIT ─── 
+window.addEventListener('DOMContentLoaded', () => {
+  renderArticles();
+  renderSimCards();
+  renderFinance();
+  renderRegions();
+  updateCounts();
+});
+</script>
+</body>
+</html>
