@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球云通 RoamLab · 亚洲流量卡 · VPS · 跨境支付</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050810;
+  --bg2:#080d1a;
+  --bg3:#0d1426;
+  --accent:#00f5c4;
+  --accent2:#4f8fff;
+  --accent3:#ff4f7b;
+  --gold:#f5c842;
+  --text:#eef2ff;
+  --muted:rgba(200,210,255,0.5);
+  --border:rgba(79,143,255,0.15);
+  --border2:rgba(79,143,255,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:68px;background:rgba(5,8,16,0.7);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700}
+.logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-right{display:flex;gap:1rem;align-items:center}
+.nav-cta{background:var(--accent);color:#050810;border:none;padding:0.45rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:box-shadow 0.2s}
+.admin-btn{background:transparent;border:1px solid var(--accent2);color:var(--accent2);padding:0.45rem 1rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-family:inherit;transition:border-color 0.2s,color 0.2s}
+.admin-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,8,16,0.9),rgba(13,20,38,0.8))}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:1000px}
+h1{font-family:'Noto Sans SC',sans-serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:900;line-height:1.1;letter-spacing:-0.01em;margin-bottom:1rem}
+h1 .hl{background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.1rem;color:var(--muted);line-height:1.9;max-width:600px;margin:0 auto 2.5rem;font-weight:300}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-main{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#050810;border:none;padding:1rem 2.8rem;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit;transition:transform 0.15s,box-shadow 0.2s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,143,255,0.35)}
+
+.hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-top:4rem;max-width:1100px;margin-left:auto;margin-right:auto}
+.hero-card{background:rgba(13,20,38,0.8);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+.hero-card-icon{font-size:2.2rem;margin-bottom:0.75rem}
+.hero-card h3{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem}
+.hero-card p{font-size:0.85rem;color:var(--muted)}
+
+/* STATS */
+.stats{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 2rem}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.78rem;color:var(--muted);margin-top:0.5rem;text-transform:uppercase;letter-spacing:0.08em}
+
+/* SECTION BASE */
+.wrap{max-width:1200px;margin:0 auto;padding:5rem 2rem}
+.sec-tag{font-size:0.72rem;font-weight:600;color:var(--accent2);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem}
+h2{font-family:'Noto Sans SC',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.15;margin-bottom:1rem}
+.sec-sub{color:var(--muted);font-size:0.95rem;max-width:500px;line-height:1.8;margin-bottom:3rem;font-weight:300}
+
+/* VIDEO SHOWCASE - 三段视频全展示 */
+.video-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.video-wrap{max-width:1200px;margin:0 auto;padding:4rem 2rem}
+.video-top{display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:3rem}
+.video-main{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;cursor:pointer}
+.video-main video{width:100%;height:100%;object-fit:cover;opacity:0.85}
+.video-main-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);padding:2rem 1.5rem 1.5rem;color:var(--text)}
+.video-main-label h3{font-size:1.3rem;font-weight:700;margin-bottom:0.5rem}
+.video-main-label p{font-size:0.9rem;color:var(--muted)}
+.video-right{display:grid;grid-template-rows:1fr 1fr;gap:1.5rem}
+.video-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;cursor:pointer}
+.video-card video{width:100%;height:100%;object-fit:cover;opacity:0.75}
+.video-card-label{position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;flex-direction:column;justify-content:flex-end;padding:1rem;color:var(--text);opacity:0;transition:opacity 0.3s}
+.video-card:hover .video-card-label{opacity:1}
+.video-card-label h4{font-size:0.95rem;font-weight:700;margin-bottom:0.3rem}
+.video-card-label p{font-size:0.75rem;color:rgba(200,210,255,0.8)}
+
+/* PRODUCTS */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem}
+.product{background:rgba(13,20,38,0.8);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;overflow:hidden;transition:transform 0.25s,border-color 0.25s}
+.product::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.25s}
+.product:hover{transform:translateY(-3px);border-color:var(--border2)}
+.product:hover::before{opacity:1}
+.product.sim::before{background:linear-gradient(90deg,#ff6b6b,#ff4f7b)}
+.product.vps::before{background:linear-gradient(90deg,var(--accent2),#6c63ff)}
+.product.finance::before{background:linear-gradient(90deg,var(--gold),var(--accent))}
+.product-icon{font-size:2rem;margin-bottom:1rem}
+.product h3{font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center}
+.product-edit{background:transparent;border:none;color:var(--accent);cursor:pointer;font-size:1rem}
+.product-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;min-height:50px}
+.product-price{font-size:1.4rem;font-weight:700;color:var(--accent);margin-bottom:1rem;display:flex;align-items:baseline;gap:0.5rem}
+.product-price span{font-size:0.85rem;color:var(--muted);font-weight:400}
+.product-features{list-style:none;font-size:0.8rem;color:var(--muted);line-height:2}
+.product-features li{padding-left:1.5rem;position:relative}
+.product-features li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700}
+
+/* COMPARISON TABLE */
+.comparison{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:2rem}
+.comp-header{display:grid;grid-template-columns:2fr 1.2fr 1.2fr 1.2fr;background:rgba(79,143,255,0.1);padding:1rem;font-weight:600;font-size:0.9rem}
+.comp-row{display:grid;grid-template-columns:2fr 1.2fr 1.2fr 1.2fr;padding:1rem;border-top:1px solid var(--border);font-size:0.85rem;align-items:center}
+.comp-row:hover{background:rgba(79,143,255,0.05)}
+
+/* ADMIN PANEL */
+.admin-panel{position:fixed;bottom:2rem;right:2rem;z-index:150}
+.admin-fab{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#050810;border:none;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(79,143,255,0.35);transition:transform 0.2s;display:flex;align-items:center;justify-content:center}
+.admin-fab:hover{transform:scale(1.1)}
+.admin-menu{position:absolute;bottom:70px;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:none}
+.admin-menu.open{display:block}
+.admin-menu button{width:100%;text-align:left;padding:0.7rem;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-family:inherit;font-size:0.85rem;margin-bottom:0.5rem;transition:border-color 0.2s}
+.admin-menu button:hover{border-color:var(--accent)}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2.5rem;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-close{position:absolute;top:1.5rem;right:1.5rem;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1.8rem}
+.modal-title{font-size:1.5rem;margin-bottom:1.5rem;font-weight:700}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;margin-bottom:0.5rem;font-weight:500;font-size:0.9rem}
+.form-group input,.form-group textarea{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:0.875rem}
+.form-group textarea{min-height:80px;resize:vertical}
+.btn-save{width:100%;background:var(--accent);color:#050810;border:none;padding:0.8rem;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit;margin-top:1rem}
+.btn-save:hover{opacity:0.9}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.78rem}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.on{opacity:1;transform:none}
+
+@media(max-width:768px){
+  nav{padding:0 1.25rem}
+  .nav-links{display:none}
+  .hero-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:1fr 1fr}
+  .video-top{grid-template-columns:1fr}
+  .video-right{grid-template-columns:1fr}
+  .comp-header,.comp-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🌐</div>
+    <strong>全球云通</strong> RoamLab
+  </div>
+  <ul class="nav-links">
+    <li><a href="#sim">亚洲流量卡</a></li>
+    <li><a href="#vps">云服务器</a></li>
+    <li><a href="#finance">跨境金融</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="admin-btn" onclick="showLogin()">🔐 管理员</button>
+    <button class="nav-cta" onclick="location.href='#contact'">立即咨询</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1>
+      全球最快流量卡<br>
+      <span class="hl">连接 180+ 国家 · 5G 体验</span>
+    </h1>
+    <p class="hero-sub">
+      一张卡走遍亚洲 · 云服务器全球部署 · 跨境支付秒到账<br>
+      为 500 万+ 全球创业者和数字游民的首选方案
+    </p>
+    <div class="hero-actions">
+      <button class="btn-main">立即免费试用 7 天 →</button>
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero-card">
+        <div class="hero-card-icon">📱</div>
+        <h3>亚洲流量卡</h3>
+        <p>¥59 起 · 35+ 国家 · 5G 畅通</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon">🖥️</div>
+        <h3>云服务器</h3>
+        <p>¥99 起 · 50+ 节点 · 99.9% 可用</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon">💳</div>
+        <h3>跨境支付</h3>
+        <p>0 汇差 · 195+ 银行 · 秒级到账</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">520万+</div>
+      <div class="stat-label">全球用户</div>
+    </div>
+    <div>
+      <div class="stat-num">180+</div>
+      <div class="stat-label">国家覆盖</div>
+    </div>
+    <div>
+      <div class="stat-num">99.9%</div>
+      <div class="stat-label">运行时间</div>
+    </div>
+    <div>
+      <div class="stat-num">7×24</div>
+      <div class="stat-label">中文支持</div>
+    </div>
+  </div>
+</div>
+
+<!-- 三段视频展示 -->
+<section class="video-section">
+  <div class="video-wrap reveal">
+    <div class="sec-tag">核心技术支撑</div>
+    <h2>全球实时网络拓扑</h2>
+    <p class="sec-sub">三大支柱，完整覆盖你的国际业务需求</p>
+
+    <div class="video-top">
+      <!-- 主视频：赛博朋克 -->
+      <div class="video-main" onclick="playVideo('hero-cyber.mp4')">
+        <video autoplay muted loop playsinline>
+          <source src="hero-cyber.mp4" type="video/mp4">
+        </video>
+        <div class="video-main-label">
+          <h3>⚡ 时空网络基础设施</h3>
+          <p>企业级云服务、自动故障转移、全球 CDN 加速</p>
+        </div>
+      </div>
+
+      <div class="video-right">
+        <!-- 副视频1：卫星 -->
+        <div class="video-card" onclick="playVideo('hero-satellite.mp4')">
+          <video autoplay muted loop playsinline>
+            <source src="hero-satellite.mp4" type="video/mp4">
+          </video>
+          <div class="video-card-label">
+            <h4>🛰️ 卫星级覆盖</h4>
+            <p>180+ 国家信号追踪</p>
+          </div>
+        </div>
+
+        <!-- 副视频2：连接线 -->
+        <div class="video-card" onclick="playVideo('hero-connect.mp4')">
+          <video autoplay muted loop playsinline>
+            <source src="hero-connect.mp4" type="video/mp4">
+          </video>
+          <div class="video-card-label">
+            <h4>🌍 全球节点互联</h4>
+            <p>50+ 高速节点实时连接</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 产品详情 -->
+<section id="products">
+<div class="wrap reveal">
+  <div class="sec-tag">核心产品</div>
+  <h2>一站式全球连接方案</h2>
+  <p class="sec-sub">点击产品卡片的编辑按钮可以修改内容</p>
+
+  <div class="product-grid">
+    <!-- 亚洲流量卡 -->
+    <div class="product sim" id="sim">
+      <div class="product-icon">📱</div>
+      <h3>
+        亚洲流量卡
+        <button class="product-edit" onclick="editProduct('sim')" title="编辑">✏️</button>
+      </h3>
+      <p class="product-desc">全亚洲最优价格，覆盖 35+ 国家地区。支持 4G/5G，自动智能切换，无需换卡。</p>
+      <div class="product-price">
+        <span id="sim-price">¥59</span>
+        <span>/7天</span>
+      </div>
+      <ul class="product-features">
+        <li>日本/韩国 5G 最快体验</li>
+        <li>东南亚 35+ 城市覆盖</li>
+        <li>一张卡自动切换最优信号</li>
+        <li>按量计费 ¥0.99/GB</li>
+        <li>7 天免费试用</li>
+      </ul>
+    </div>
+
+    <!-- 云服务器 -->
+    <div class="product vps" id="vps">
+      <div class="product-icon">🖥️</div>
+      <h3>
+        全球云服务器
+        <button class="product-edit" onclick="editProduct('vps')" title="编辑">✏️</button>
+      </h3>
+      <p class="product-desc">6 大洲 50+ 数据中心，一键部署，智能负载均衡，自动扩展。</p>
+      <div class="product-price">
+        <span id="vps-price">¥99</span>
+        <span>/月起</span>
+      </div>
+      <ul class="product-features">
+        <li>亚太节点：日本、新加坡、香港</li>
+        <li>欧美节点：美国、英国、德国</li>
+        <li>中国专线低延迟</li>
+        <li>2核 2GB 内存配置</li>
+        <li>30 天无理由退款</li>
+      </ul>
+    </div>
+
+    <!-- 跨境金融 -->
+    <div class="product finance" id="finance">
+      <div class="product-icon">💳</div>
+      <h3>
+        跨境支付工具
+        <button class="product-edit" onclick="editProduct('finance')" title="编辑">✏️</button>
+      </h3>
+      <p class="product-desc">一个账户全球支付，多币种交易，零汇差，秒级到账。</p>
+      <div class="product-price">
+        <span id="finance-price">¥0</span>
+        <span>手续费</span>
+      </div>
+      <ul class="product-features">
+        <li>SWIFT 转账 195+ 银行</li>
+        <li>虚拟卡 Visa/Mastercard</li>
+        <li>多币种账户 USD/EUR/CNY</li>
+        <li>比 PayPal 便宜 30%</li>
+        <li>企业级 API 自动化</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 产品对比 -->
+  <div class="comparison" onclick="editComparison()">
+    <div class="comp-header">
+      <div>功能对比</div>
+      <div>我们</div>
+      <div>竞品 A</div>
+      <div>竞品 B</div>
+    </div>
+    <div class="comp-row"><div>覆盖国家</div><div>✓ 180+</div><div>✗ 80+</div><div>✗ 120+</div></div>
+    <div class="comp-row"><div>平均延迟</div><div>✓ <15ms</div><div>✗ 45ms</div><div>✗ 35ms</div></div>
+    <div class="comp-row"><div>中文支持</div><div>✓ 7×24</div><div>✗ 工作时间</div><div>✓ 工作时间</div></div>
+    <div class="comp-row"><div>价格优势</div><div>✓ 最便宜</div><div>✗ 偏高</div><div>✗ 中等</div></div>
+    <div class="comp-row"><div>隐藏费用</div><div>✓ 透明</div><div>✗ 有</div><div>✗ 有</div></div>
+  </div>
+</div>
+</section>
+
+<!-- 管理浮窗 -->
+<div class="admin-panel">
+  <button class="admin-fab" onclick="toggleAdminMenu()" title="打开管理面板">⚙️</button>
+  <div class="admin-menu" id="admin-menu">
+    <button onclick="showLogin()">🔐 管理员登录</button>
+    <button onclick="editProduct('all')">📝 编辑所有内容</button>
+    <button onclick="exportData()">💾 导出数据</button>
+    <button onclick="alert('访问：domain.com/admin.html')">🔗 后台管理</button>
+  </div>
+</div>
+
+<!-- 登录弹窗 -->
+<div class="modal" id="login-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('login-modal')">×</button>
+    <h2 class="modal-title">🔐 管理员登录</h2>
+    <div class="form-group">
+      <label>邮箱</label>
+      <input type="email" id="login-email" placeholder="admin@roamlab.com">
+    </div>
+    <div class="form-group">
+      <label>密码</label>
+      <input type="password" id="login-password" placeholder="••••••••">
+    </div>
+    <button class="btn-save" onclick="doLogin()">进入后台管理</button>
+    <p style="font-size:0.8rem;color:var(--muted);margin-top:1rem;text-align:center">
+      演示账户：admin@roamlab.com / roamlab2026
+    </p>
+  </div>
+</div>
+
+<!-- 编辑弹窗 -->
+<div class="modal" id="edit-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('edit-modal')">×</button>
+    <h2 class="modal-title" id="edit-title">编辑产品</h2>
+    <div id="edit-form"></div>
+  </div>
+</div>
+
+<footer id="contact">
+  <p><strong>全球云通 RoamLab</strong> · 全球联动 · 一站式网络解决方案</p>
+  <p style="margin-top:1rem">
+    📧 contact@roamlab.com &nbsp;|&nbsp; 
+    💬 微信客服 &nbsp;|&nbsp; 
+    📱 +86-10-xxxx-xxxx
+  </p>
+  <p style="margin-top:0.5rem">© 2026 Global CloudHub · <a href="/admin.html" style="color:var(--accent);text-decoration:none">管理后台 →</a></p>
+</footer>
+
+<script>
+// ─── 数据管理 ───
+const productData = JSON.parse(localStorage.getItem('roamlab_products')) || {
+  sim: {
+    title: '亚洲流量卡',
+    desc: '全亚洲最优价格，覆盖 35+ 国家地区。支持 4G/5G，自动智能切换，无需换卡。',
+    price: '¥59'
+  },
+  vps: {
+    title: '全球云服务器',
+    desc: '6 大洲 50+ 数据中心，一键部署，智能负载均衡，自动扩展。',
+    price: '¥99'
+  },
+  finance: {
+    title: '跨境支付工具',
+    desc: '一个账户全球支付，多币种交易，零汇差，秒级到账。',
+    price: '¥0'
+  }
+};
+
+function saveData(){
+  localStorage.setItem('roamlab_products', JSON.stringify(productData));
+}
+
+// ─── 管理菜单 ───
+function toggleAdminMenu(){
+  const menu = document.getElementById('admin-menu');
+  menu.classList.toggle('open');
+}
+
+function showLogin(){
+  document.getElementById('login-modal').classList.add('open');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+
+function doLogin(){
+  const email = document.getElementById('login-email').value;
+  const pwd = document.getElementById('login-password').value;
+  
+  if(email === 'admin@roamlab.com' && pwd === 'roamlab2026'){
+    localStorage.setItem('admin_token', 'logged_' + Date.now());
+    alert('✓ 登录成功！跳转到后台管理...');
+    location.href = 'admin.html';
+  } else {
+    alert('✗ 邮箱或密码错误');
+  }
+}
+
+// ─── 产品编辑 ───
+function editProduct(type){
+  const data = productData[type];
+  const modal = document.getElementById('edit-modal');
+  const title = document.getElementById('edit-title');
+  const form = document.getElementById('edit-form');
+  
+  title.textContent = `编辑 ${data.title}`;
+  form.innerHTML = `
+    <div class="form-group">
+      <label>产品名称</label>
+      <input type="text" id="edit-title-input" value="${data.title}">
+    </div>
+    <div class="form-group">
+      <label>产品描述</label>
+      <textarea id="edit-desc-input">${data.desc}</textarea>
+    </div>
+    <div class="form-group">
+      <label>起价</label>
+      <input type="text" id="edit-price-input" value="${data.price}">
+    </div>
+    <button class="btn-save" onclick="saveProduct('${type}')">保存修改</button>
+  `;
+  
+  modal.classList.add('open');
+}
+
+function saveProduct(type){
+  productData[type] = {
+    title: document.getElementById('edit-title-input').value,
+    desc: document.getElementById('edit-desc-input').value,
+    price: document.getElementById('edit-price-input').value
+  };
+  
+  saveData();
+  location.reload();
+}
+
+function editComparison(){
+  alert('🔧 对比表编辑功能 - 请在后台管理界面编辑\n访问: /admin.html');
+}
+
+function exportData(){
+  const data = JSON.stringify(productData, null, 2);
+  const blob = new Blob([data], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'roamlab_data_' + Date.now() + '.json';
+  a.click();
+}
+
+// ─── 页面加载 ───
+window.addEventListener('DOMContentLoaded', () => {
+  // 加载数据到前端
+  document.getElementById('sim-price').textContent = productData.sim.price;
+  document.getElementById('vps-price').textContent = productData.vps.price;
+  document.getElementById('finance-price').textContent = productData.finance.price;
+  
+  // Reveal 动画
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('on');
+        observer.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+});
+
+// ─── 检查后台访问 ───
+if(location.pathname.includes('admin.html')){
+  const token = localStorage.getItem('admin_token');
+  if(!token){
+    location.href = 'index.html';
+  }
+}
+</script>
+</body>
+</html>
